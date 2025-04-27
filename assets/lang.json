@@ -1,0 +1,17 @@
+{
+    "en": {
+      "title": "🎡 myStarJob Fair - Spin and Win!",
+      "spinButton": "SPIN!",
+      "resultPrefix": "🎉 You won: ",
+      "outOfStock": "😔 Oops! No more",
+      "tryAgain": "Try again!"
+    },
+    "ms": {
+      "title": "🎡 myStarJob Fair - Pusing dan Menang!",
+      "spinButton": "PUSING!",
+      "resultPrefix": "🎉 Anda menang: ",
+      "outOfStock": "😔 Maaf! Tiada lagi",
+      "tryAgain": "Cuba lagi!"
+    }
+  }
+  

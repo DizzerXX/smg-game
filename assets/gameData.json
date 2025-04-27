@@ -1,0 +1,50 @@
+[
+  {
+    "label": "MacBook",
+    "image": "assets/images/macbook.png",
+    "quantity": 6,
+    "tier": "grand",
+    "weight": 0.05,
+    "color": "hsl(197 30% 43%)"
+  },
+  {
+    "label": "Exclusive Buttons",
+    "image": "assets/images/stickers.png",
+    "quantity": 50,
+    "tier": "consolation",
+    "weight": 0.2333,
+    "color": "hsl(350 60% 52%)"
+  },
+  {
+    "label": "Smartphone",
+    "image": "assets/images/smartphone.png",
+    "quantity": 10,
+    "tier": "secondary",
+    "weight": 0.1,
+    "color": "hsl(173 58% 39%)"
+  },
+  {
+    "label": "Limited Edition Pen",
+    "image": "assets/images/pen.png",
+    "quantity": 50,
+    "tier": "consolation",
+    "weight": 0.2333,
+    "color": "hsl(27 87% 67%)"
+  },
+  {
+    "label": "Smartwatch",
+    "image": "assets/images/smartwatch.png",
+    "quantity": 20,
+    "tier": "tertiary",
+    "weight": 0.15,
+    "color": "hsl(43 74% 66%)"
+  },
+  {
+    "label": "Special Edition Notepad",
+    "image": "assets/images/notepad.png",
+    "quantity": 50,
+    "tier": "consolation",
+    "weight": 0.2333,
+    "color": "hsl(12 76% 61%)"
+  }
+]
