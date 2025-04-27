@@ -1,4 +1,14 @@
 import { Wheel } from "https://cdn.jsdelivr.net/npm/spin-wheel@5.0.2/dist/spin-wheel-esm.js";
+// import JSConfetti from 'https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js';
+
+
+const confetti = document.getElementById('confetti');
+const jsConfettiInstance = new JSConfetti({ confetti });
+const grandPrizeSound = document.getElementById('grand-prize-sound');
+const secondPrizeSound = document.getElementById('second-prize-sound');
+const consolationPrizeSound = document.getElementById('consolation-prize-sound');
+const sadPrizeSound = document.getElementById('sad-prize-sound');
+
 
 document.addEventListener("DOMContentLoaded", () => {
   let gameData = [];
@@ -34,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
         prize: "You won: ",
       },
       ms: {
-        title: "Permainan Roda Kemenanganku",
+        title: "myStarJob Spin Wheel Game",
         button: "Putar Roda",
         prize: "Anda menang: ",
       },
@@ -79,8 +89,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return wheelItem;
     });
 
-    console.log(wheelItems);
-
     const overlayImg = new Image();
     overlayImg.src = "./assets/images/overlay.svg";
     overlayImg.onload = function () {
@@ -109,23 +117,26 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
+    // Listen to when the spin has finished
     wheel.onCurrentIndexChange = (e) => {
       if (!wheel.isSpinning) {
         isSpinning = false;
         document.getElementById("spin-button").disabled = false;
-        const prize = gameData[e.currentIndex];
-        const lang = document.documentElement.lang;
-        const prizeText = lang === "en" ? "You won: " : "Anda menang: ";
-    
-        const prizeDisplay = document.getElementById("prize-display");
-        prizeDisplay.innerHTML = `
-          ${prizeText}${prize.label} 
-          <br>
-          <img src="${prize.image}" alt="${prize.label}" height="200">
-        `;
       }
     };
-    
+
+    wheel.onRest = (e) => {
+      // After the wheel stops, determine the prize
+      const prize = gameData[e.currentIndex];
+      if (prize.quantity > 0) {
+        // Show the prize and only then update quantity
+        showPrize(prize);
+        playEffect(prize);
+      } else {
+        // Handle case when prize has zero quantity
+        showNoPrize();
+      }
+    }
   }
 
   function spinWheel() {
@@ -133,26 +144,99 @@ document.addEventListener("DOMContentLoaded", () => {
     isSpinning = true;
     document.getElementById("spin-button").disabled = true;
 
-    const totalWeight = gameData.reduce((sum, item) => sum + item.weight, 0);
-    let random = Math.random() * totalWeight;
-    let selectedIndex = 0;
+    // Pick only available prizes
+    const availablePrizes = gameData.filter(item => item.quantity > 0);
+    if (availablePrizes.length === 0) {
+      showNoPrize()
+      sadPrizeSound.play()
+      isSpinning = false;
+      document.getElementById("spin-button").disabled = false;
+      return;
+    }
 
-    for (let i = 0; i < gameData.length; i++) {
-      random -= gameData[i].weight;
+    const totalWeight = availablePrizes.reduce((sum, item) => sum + item.weight, 0);
+    let random = Math.random() * totalWeight;
+    let selectedPrize = availablePrizes[0];
+
+    for (let i = 0; i < availablePrizes.length; i++) {
+      random -= availablePrizes[i].weight;
       if (random <= 0) {
-        selectedIndex = i;
+        selectedPrize = availablePrizes[i];
         break;
       }
     }
 
-    const selectedPrize = gameData[selectedIndex];
-    const lang = document.documentElement.lang;
-    const prizeText = lang === "en" ? "You will win: " : "Anda akan menang: ";
-    document.getElementById(
-      "prize-display"
-    ).textContent = `${prizeText}${selectedPrize.label}`;
-
+    const selectedIndex = gameData.findIndex(item => item.label === selectedPrize.label);
     wheel.spinToItem(selectedIndex, 4000, true, 2, 1);
+  }
+
+  function showPrize(prize) {
+    const lang = document.documentElement.lang;
+    const prizeText = lang === "en" ? "You won: " : "Anda menang: ";
+    const prizeDisplay = document.getElementById("prize-display");
+    
+
+    prizeDisplay.innerHTML = `
+      ${prizeText}${prize.label}
+      <br>
+      <img src="${prize.image}" alt="${prize.label}" height="200">
+    `;
+
+    // Update quantity after spin completes
+    prize.quantity--;  // Deduct quantity after spin
+    saveGameData();     // Save updated data (e.g., to local storage or backend)
+  }
+
+  function showNoPrize() {
+    const lang = document.documentElement.lang;
+    const noPrizeText = lang === "en" ? "No prize available. Try again next time!" : "Tiada hadiah tersedia. Cuba lagi!";
+    const prizeDisplay = document.getElementById("prize-display");
+
+    prizeDisplay.innerHTML = `
+      <p>${noPrizeText}</p>
+    `;
+  }// Get references to the audio elements
+
+
+  function playEffect(prizeLabel) {
+    console.log(prizeLabel);
+
+    // Trigger confetti effect
+    jsConfettiInstance.addConfetti({
+      confettiColors: ['#ff0000', '#00ff00', '#0000ff'], // Custom colors
+      confettiNumber: 150, // Number of confetti pieces
+      confettiShape: 'circle', // 'circle' or 'square' for the confetti shapes
+      confettiWidth: 5, // Width of each confetti piece
+      confettiHeight: 5, // Height of each confetti piece
+    });
+
+    // Play the sound based on prize tier
+    let sound;
+
+    if (prizeLabel.tier === "grand") {
+      sound = grandPrizeSound;
+      grandPrizeSound.play()
+    } else if (prizeLabel.tier === "secondary") {
+      sound = secondPrizeSound;
+      secondPrizeSound.play()
+    } else if (prizeLabel.tier === "consolation") {
+      sound = consolationPrizeSound;
+      consolationPrizeSound.play()
+    }
+
+    // Play the sound if it's correctly assigned
+    if (sound) {
+      sound.play().catch((error) => {
+        console.error("Error playing sound:", error);
+      });
+    }
+}
+
+
+
+  function saveGameData() {
+    // Example: You can save data in local storage or send it to a backend
+    // console.log("Updated gameData:", gameData);
   }
 
   updateText();

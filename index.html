@@ -8,6 +8,12 @@
   </head>
 
   <body>
+    <!-- Preload audio files (optional) -->
+    <audio id="grand-prize-sound" src="./assets/sounds/grand.mp3" preload="auto"></audio>
+    <audio id="second-prize-sound" src="./assets/sounds/secondary.mp3" preload="auto"></audio>
+    <audio id="consolation-prize-sound" src="./assets/sounds/consolation.mp3" preload="auto"></audio>
+    <audio id="sad-prize-sound" src="./assets/sounds/sad.mp3" preload="auto"></audio>
+
     <header>
       <h1>myStarJob Spin Wheel Game</h1>
       <button id="lang-switch">Switch Language <img src="./assets/images/ENG_flag.png" height="25" alt=""></button>
@@ -21,6 +27,8 @@
       </section>
     </main>
 
+    <canvas class="confetti"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
     <script type="module" src="script.js"></script>
   </body>
 </html>
