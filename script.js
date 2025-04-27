@@ -1,5 +1,5 @@
 import { Wheel } from "https://cdn.jsdelivr.net/npm/spin-wheel@5.0.2/dist/spin-wheel-esm.js";
-// import JSConfetti from 'https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js';
+
 
 
 const confetti = document.getElementById('confetti');
@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Listen to when the spin has finished
+    
     wheel.onCurrentIndexChange = (e) => {
       if (!wheel.isSpinning) {
         isSpinning = false;
@@ -126,14 +126,14 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     wheel.onRest = (e) => {
-      // After the wheel stops, determine the prize
+      
       const prize = gameData[e.currentIndex];
       if (prize.quantity > 0) {
-        // Show the prize and only then update quantity
+        
         showPrize(prize);
         playEffect(prize);
       } else {
-        // Handle case when prize has zero quantity
+        
         showNoPrize();
       }
     }
@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
     isSpinning = true;
     document.getElementById("spin-button").disabled = true;
 
-    // Pick only available prizes
+    
     const availablePrizes = gameData.filter(item => item.quantity > 0);
     if (availablePrizes.length === 0) {
       showNoPrize()
@@ -182,9 +182,9 @@ document.addEventListener("DOMContentLoaded", () => {
       <img src="${prize.image}" alt="${prize.label}" height="200">
     `;
 
-    // Update quantity after spin completes
-    prize.quantity--;  // Deduct quantity after spin
-    saveGameData();     // Save updated data (e.g., to local storage or backend)
+    
+    prize.quantity--;  
+    saveGameData();     
   }
 
   function showNoPrize() {
@@ -195,22 +195,22 @@ document.addEventListener("DOMContentLoaded", () => {
     prizeDisplay.innerHTML = `
       <p>${noPrizeText}</p>
     `;
-  }// Get references to the audio elements
+  }
 
 
   function playEffect(prizeLabel) {
     console.log(prizeLabel);
 
-    // Trigger confetti effect
+    
     jsConfettiInstance.addConfetti({
-      confettiColors: ['#ff0000', '#00ff00', '#0000ff'], // Custom colors
-      confettiNumber: 150, // Number of confetti pieces
-      confettiShape: 'circle', // 'circle' or 'square' for the confetti shapes
-      confettiWidth: 5, // Width of each confetti piece
-      confettiHeight: 5, // Height of each confetti piece
+      confettiColors: ['#ff0000', '#00ff00', '#0000ff'], 
+      confettiNumber: 150, 
+      confettiShape: 'circle', 
+      confettiWidth: 5, 
+      confettiHeight: 5, 
     });
 
-    // Play the sound based on prize tier
+    
     let sound;
 
     if (prizeLabel.tier === "grand") {
@@ -224,7 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
       consolationPrizeSound.play()
     }
 
-    // Play the sound if it's correctly assigned
+    
     if (sound) {
       sound.play().catch((error) => {
         console.error("Error playing sound:", error);
@@ -235,8 +235,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   function saveGameData() {
-    // Example: You can save data in local storage or send it to a backend
-    // console.log("Updated gameData:", gameData);
+    
+    
   }
 
   updateText();
